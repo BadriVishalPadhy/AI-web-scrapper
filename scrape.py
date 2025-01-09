@@ -7,31 +7,30 @@ SBR_WEBDRIVER = 'https://brd-customer-hl_aac85a9c-zone-scraping_browser1:lvz536s
 
   
 import time
-def scrape_website(website):    
-    print("Launching chrome browser . . . ")
-
-    sbr_connection = ChromiumRemoteConnection(SBR_WEBDRIVER, 'goog', 'chrome')
+def scrape_website(website):
+    print("Connecting to Scraping Browser...")
+    sbr_connection = ChromiumRemoteConnection(SBR_WEBDRIVER, "goog", "chrome")
     with Remote(sbr_connection, options=ChromeOptions()) as driver:
-        print("Lets goooooo")
         driver.get(website)
-        # CAPTCHA handling: If you're expecting a CAPTCHA on the target page, use the following code snippet to check the status of Scraping Browser's automatic CAPTCHA solver
-        print('Waiting captcha to solve...')
-        solve_res = driver.execute('executeCdpCommand', {
-            'cmd': 'Captcha.waitForSolve',
-            'params': {'detectTimeout': 10000},
-        })
-        print('Captcha solve status:', solve_res['value']['status'])
-        print('Navigated! Scraping page content...')
+        print("Waiting captcha to solve...")
+        solve_res = driver.execute(
+            "executeCdpCommand",
+            {
+                "cmd": "Captcha.waitForSolve",
+                "params": {"detectTimeout": 10000},
+            },
+        )
+        print("Captcha solve status:", solve_res["value"]["status"])
+        print("Navigated! Scraping page content...")
         html = driver.page_source
-        return html      
-
+        return html
 
 
 def extract_body_content(html_content):
-    soup = BeautifulSoup( html_content ,"html.parser" )
-    body_count = soup.body
-    if(body_count):
-        return str(body_count)
+    soup = BeautifulSoup(html_content, "html.parser")
+    body_content = soup.body
+    if body_content:
+        return str(body_content)
     return ""
 
 
